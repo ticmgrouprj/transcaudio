@@ -1,0 +1,6 @@
+streamlit
+openai-whisper
+pyannote.audio
+python-docx
+fpdf2
+pydub
