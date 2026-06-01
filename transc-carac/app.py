@@ -233,7 +233,7 @@ with st.sidebar:
         num_locutores = st.number_input("👥 Número de Locutores (0 = auto)", min_value=0, value=0, step=1)
         
         st.markdown("**Qualidade da Transcrição**")
-        modelo_whisper = st.selectbox("Qualidade/Modelo", ["tiny", "base", "small", "medium", "large"], index=1, help="Maior qualidade = tempo de processamento mais longo.")
+        modelo_whisper = st.selectbox("Qualidade/Modelo", ["tiny", "base", "small", "medium", "large"], index=2, help="Maior qualidade = tempo de processamento mais longo.")
 
 # ==========================================
 # 3. ABA 1: TRANSCRIÇÃO PASSO A PASSO
