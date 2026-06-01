@@ -4,4 +4,3 @@ pyannote.audio
 python-docx
 fpdf2
 pydub
-pyaudioop
