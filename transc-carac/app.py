@@ -233,7 +233,7 @@ with st.sidebar:
         num_locutores = st.number_input("👥 Número de Locutores (0 = auto)", min_value=0, value=0, step=1)
         
         st.markdown("**Qualidade da Transcrição**")
-        modelo_whisper = st.selectbox("Qualidade/Modelo", ["tiny", "base", "small", "medium", "large"], index=2, help="Maior qualidade = tempo de processamento mais longo.")
+        modelo_whisper = st.selectbox("Qualidade/Modelo", ["tiny", "base", "small", "medium", "large"], index=1, help="Maior qualidade = tempo de processamento mais longo.")
 
 # ==========================================
 # 3. ABA 1: TRANSCRIÇÃO PASSO A PASSO
@@ -339,10 +339,58 @@ with tabs[1]:
         texto_digitado = st.text_area("Área de Texto:", height=250, placeholder="Cole ou digite seu texto aqui...")
     with col_input2:
         st.info("Ou use um arquivo:")
-        arquivo_texto = st.file_uploader("Upload de arquivo (.txt)", type=['txt'], label_visibility="collapsed")
+        arquivo_texto = st.file_uploader("Upload de arquivo (txt, pdf, docx, doc)", type=['txt', 'pdf', 'docx', 'doc'], label_visibility="collapsed")
     
     if arquivo_texto:
-        texto_para_contar = arquivo_texto.getvalue().decode("utf-8")
+        nome_arquivo = arquivo_texto.name.lower()
+        try:
+            if nome_arquivo.endswith('.txt'):
+                texto_para_contar = arquivo_texto.getvalue().decode("utf-8", errors="ignore")
+            elif nome_arquivo.endswith('.pdf'):
+                import pypdf
+                leitor = pypdf.PdfReader(arquivo_texto)
+                texto_extraido = []
+                for pagina in leitor.pages:
+                    texto_pagina = pagina.extract_text()
+                    if texto_pagina:
+                        texto_extraido.append(texto_pagina)
+                texto_para_contar = "\n".join(texto_extraido)
+            elif nome_arquivo.endswith('.docx'):
+                import docx
+                import io
+                doc = docx.Document(io.BytesIO(arquivo_texto.getvalue()))
+                texto_para_contar = "\n".join([p.text for p in doc.paragraphs])
+            elif nome_arquivo.endswith('.doc'):
+                import subprocess
+                import tempfile
+                with tempfile.NamedTemporaryFile(delete=False, suffix=".doc") as tmp:
+                    tmp.write(arquivo_texto.getvalue())
+                    tmp_path = tmp.name
+                try:
+                    resultado = subprocess.run(['antiword', tmp_path], capture_output=True, text=True)
+                    if resultado.returncode == 0:
+                        texto_para_contar = resultado.stdout
+                    else:
+                        st.error("Erro ao ler arquivo .doc. Verifique se o formato está correto.")
+                        texto_para_contar = ""
+                except FileNotFoundError:
+                    try:
+                        import docx
+                        import io
+                        doc = docx.Document(io.BytesIO(arquivo_texto.getvalue()))
+                        texto_para_contar = "\n".join([p.text for p in doc.paragraphs])
+                    except:
+                        st.error("Pacote 'antiword' não encontrado para ler .doc nativamente.")
+                        texto_para_contar = ""
+                finally:
+                    if os.path.exists(tmp_path):
+                        os.remove(tmp_path)
+            else:
+                st.error("Formato de arquivo não suportado.")
+        except Exception as e:
+            st.error(f"Erro ao processar o arquivo: {e}")
+            texto_para_contar = ""
+            
     elif texto_digitado:
         texto_para_contar = texto_digitado
         
