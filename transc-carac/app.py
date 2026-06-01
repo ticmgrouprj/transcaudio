@@ -1,4 +1,5 @@
 import streamlit as st
+import streamlit.components.v1 as components
 import tempfile
 import os
 import re
@@ -28,7 +29,7 @@ def inject_custom_css():
     .block-container {
         padding-top: 2rem !important;
         padding-bottom: 2rem !important;
-        max-width: 1200px !important;
+        max-width: 98% !important;
     }
 
     /* Estilo de Botões */
@@ -208,7 +209,42 @@ st.markdown("<div class='main-title'>Transc-Carac Pro</div>", unsafe_allow_html=
 st.markdown("<div class='sub-title'>Sistema inteligente alimentado por IA para <b>transcrição de áudio</b> e <b>análise profunda de texto</b>.</div>", unsafe_allow_html=True)
 st.markdown("<br>", unsafe_allow_html=True)
 
-tabs = st.tabs(["🎙️ Transcrição de Áudio", "📊 Contagem de Caracteres"])
+col_ad_left, col_main, col_ad_right = st.columns([1, 4, 1], gap="large")
+
+with col_ad_left:
+    st.markdown("<div style='text-align: center; color: #64748B; font-size: 0.8rem; margin-bottom: 0.5rem;'>Publicidade</div>", unsafe_allow_html=True)
+    components.html(
+        """
+        <div style="display: flex; justify-content: center; align-items: center; background-color: #f1f5f9; border: 1px dashed #cbd5e1; border-radius: 8px; width: 100%; height: 600px; text-align: center;">
+            <span style="color: #94a3b8; font-family: sans-serif; font-size: 14px;">Espaço para Anúncio<br>Esquerdo<br><small>(Vertical 300x600)</small></span>
+        </div>
+        <!-- Exemplo de código AdSense Vertical:
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXX" crossorigin="anonymous"></script>
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-XXXXXXXXXXXXX" data-ad-slot="YYYYYYYYYY" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        -->
+        """,
+        height=600,
+    )
+
+with col_main:
+    tabs = st.tabs(["🎙️ Transcrição de Áudio", "📊 Contagem de Caracteres"])
+
+with col_ad_right:
+    st.markdown("<div style='text-align: center; color: #64748B; font-size: 0.8rem; margin-bottom: 0.5rem;'>Publicidade</div>", unsafe_allow_html=True)
+    components.html(
+        """
+        <div style="display: flex; justify-content: center; align-items: center; background-color: #f1f5f9; border: 1px dashed #cbd5e1; border-radius: 8px; width: 100%; height: 600px; text-align: center;">
+            <span style="color: #94a3b8; font-family: sans-serif; font-size: 14px;">Espaço para Anúncio<br>Direito<br><small>(Vertical 300x600)</small></span>
+        </div>
+        <!-- Exemplo de código AdSense Vertical:
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXX" crossorigin="anonymous"></script>
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-XXXXXXXXXXXXX" data-ad-slot="YYYYYYYYYY" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        -->
+        """,
+        height=600,
+    )
 
 # ==========================================
 # 2. BARRA LATERAL (SIDEBAR) MAIS LIMPA
@@ -234,6 +270,8 @@ with st.sidebar:
         
         st.markdown("**Qualidade da Transcrição**")
         modelo_whisper = st.selectbox("Qualidade/Modelo", ["tiny", "base", "small", "medium", "large"], index=1, help="Maior qualidade = tempo de processamento mais longo.")
+
+        # Fim das configurações avançadas
 
 # ==========================================
 # 3. ABA 1: TRANSCRIÇÃO PASSO A PASSO
