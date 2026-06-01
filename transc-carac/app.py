@@ -13,31 +13,190 @@ st.set_page_config(page_title="Transc-Carac Pro", page_icon="📝", layout="wide
 def inject_custom_css():
     st.markdown("""
     <style>
-    /* Ocultar menu do Streamlit e rodapé para visual de aplicativo */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
+
+    html, body, [class*="css"] {
+        font-family: 'Inter', sans-serif;
+    }
+
+    /* Ocultar menu do Streamlit e rodapé, mas manter o cabeçalho (para a seta da barra) */
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
+    header {background-color: transparent !important;}
     
-    /* Arredondar cantos e melhorar visual de containers */
-    .stTextInput>div>div>input {
-        border-radius: 8px;
+    /* Top padding reduction */
+    .block-container {
+        padding-top: 2rem !important;
+        padding-bottom: 2rem !important;
+        max-width: 1200px !important;
     }
-    .stTextArea>div>div>textarea {
-        border-radius: 8px;
+
+    /* Estilo de Botões */
+    .stButton>button {
+        border-radius: 8px !important;
+        transition: all 0.3s ease !important;
+        font-weight: 600 !important;
+        border: none !important;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
     }
-    
-    /* Melhorar o visual das métricas */
+    .stButton>button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 15px -3px rgba(30, 78, 216, 0.2) !important;
+        filter: brightness(1.05);
+    }
+
+    /* Cards para métricas */
+    [data-testid="stMetric"] {
+        background: #FFFFFF;
+        border: 1px solid #E2E8F0;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+    [data-testid="stMetric"]:hover {
+        transform: translateY(-5px);
+        border-color: #1E4ED8;
+        box-shadow: 0 10px 15px -3px rgba(30, 78, 216, 0.15);
+    }
+    [data-testid="stMetricLabel"] {
+        font-size: 1rem !important;
+        font-weight: 600 !important;
+        color: #475569 !important;
+        margin-bottom: 0.5rem !important;
+        justify-content: center !important;
+    }
     [data-testid="stMetricValue"] {
-        font-size: 1.8rem;
-        color: #1f77b4;
+        font-size: 2.2rem !important;
+        font-weight: 800 !important;
+        background: -webkit-linear-gradient(45deg, #1E4ED8, #3B82F6);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    /* Títulos e Headers */
+    .main-title {
+        background: linear-gradient(135deg, #1E4ED8, #3B82F6);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-size: 3.5rem;
+        font-weight: 800;
+        margin-bottom: 0.5rem;
+        line-height: 1.2;
+    }
+    .sub-title {
+        color: #64748B;
+        font-size: 1.2rem;
+        font-weight: 400;
+        margin-bottom: 2rem;
+    }
+
+    /* Steps */
+    .step-title {
+        color: #0F172A;
+        font-weight: 700;
+        font-size: 1.3rem;
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid #E2E8F0;
+    }
+    .step-icon {
+        background: rgba(30, 78, 216, 0.1);
+        color: #1E4ED8;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        font-size: 1.1rem;
+    }
+
+    /* Tabs Customization */
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 1rem;
+        background-color: transparent;
+    }
+    .stTabs [data-baseweb="tab"] {
+        height: 50px;
+        white-space: pre-wrap;
+        background-color: #FFFFFF;
+        border-radius: 8px !important;
+        gap: 0.5rem;
+        padding: 0 1.5rem;
+        font-weight: 600;
+        color: #64748B;
+        border: 1px solid #E2E8F0;
+        transition: all 0.3s;
+    }
+    .stTabs [aria-selected="true"] {
+        background-color: rgba(30, 78, 216, 0.05) !important;
+        color: #1E4ED8 !important;
+        border: 1px solid rgba(30, 78, 216, 0.3) !important;
     }
     
-    /* Espaçamento e títulos das etapas */
-    .step-title {
-        color: #ff4b4b;
-        font-weight: bold;
-        font-size: 1.2rem;
-        margin-top: 1rem;
-        margin-bottom: 0.5rem;
+    /* Inputs, Selects e TextAreas (Forçando via Base Web) */
+    div[data-baseweb="input"],
+    div[data-baseweb="textarea"],
+    div[data-baseweb="select"] {
+        background-color: #FFFFFF !important;
+        border: 2px solid #CBD5E1 !important;
+        border-radius: 8px !important;
+        box-shadow: inset 0 2px 4px rgba(0,0,0,0.02) !important;
+        transition: all 0.3s ease !important;
+    }
+    
+    div[data-baseweb="input"]:hover,
+    div[data-baseweb="textarea"]:hover,
+    div[data-baseweb="select"]:hover {
+        border-color: #94A3B8 !important;
+    }
+    
+    div[data-baseweb="input"]:focus-within,
+    div[data-baseweb="textarea"]:focus-within,
+    div[data-baseweb="select"]:focus-within {
+        border-color: #1E4ED8 !important;
+        box-shadow: 0 0 0 3px rgba(30, 78, 216, 0.15) !important;
+    }
+    
+    /* Forçar a cor do texto nos campos internos */
+    div[data-baseweb="input"] input,
+    div[data-baseweb="textarea"] textarea {
+        color: #0F172A !important;
+        padding-top: 0.75rem !important;
+        padding-bottom: 0.75rem !important;
+        font-size: 1rem !important;
+    }
+
+    /* File uploader */
+    [data-testid="stFileUploadDropzone"] {
+        background-color: #FFFFFF !important;
+        border: 2px dashed #94A3B8 !important;
+        border-radius: 12px !important;
+        padding: 2.5rem !important;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02) !important;
+        transition: all 0.3s ease !important;
+    }
+    [data-testid="stFileUploadDropzone"]:hover {
+        border-color: #1E4ED8 !important;
+        background-color: rgba(30, 78, 216, 0.02) !important;
+        box-shadow: 0 8px 16px rgba(30, 78, 216, 0.08) !important;
+    }
+    /* Reduzir o espaço em branco no topo da barra lateral para subir a logo */
+    [data-testid="stSidebarHeader"] {
+        padding: 0 !important;
+        min-height: 0 !important;
+    }
+    [data-testid="stSidebarUserContent"] {
+        padding-top: 0rem !important;
+    }
+    [data-testid="stSidebar"] [data-testid="stImage"] {
+        margin-top: -2rem !important;
     }
     </style>
     """, unsafe_allow_html=True)
@@ -45,9 +204,9 @@ def inject_custom_css():
 inject_custom_css()
 
 # Cabeçalho Principal
-st.title("✨ Transc-Carac Pro")
-st.markdown("Sistema inteligente para **transcrição de áudio** e **análise de texto**.")
-st.markdown("---")
+st.markdown("<div class='main-title'>Transc-Carac Pro</div>", unsafe_allow_html=True)
+st.markdown("<div class='sub-title'>Sistema inteligente alimentado por IA para <b>transcrição de áudio</b> e <b>análise profunda de texto</b>.</div>", unsafe_allow_html=True)
+st.markdown("<br>", unsafe_allow_html=True)
 
 tabs = st.tabs(["🎙️ Transcrição de Áudio", "📊 Contagem de Caracteres"])
 
@@ -55,7 +214,13 @@ tabs = st.tabs(["🎙️ Transcrição de Áudio", "📊 Contagem de Caracteres"
 # 2. BARRA LATERAL (SIDEBAR) MAIS LIMPA
 # ==========================================
 with st.sidebar:
-    st.image("https://cdn-icons-png.flaticon.com/512/3252/3252972.png", width=100)
+    try:
+        # Usa a logo da CM Group (caminho relativo a onde o streamlit foi executado)
+        st.image("00 - Logo da CM/Logo C&M Group.png", use_container_width=True)
+    except Exception:
+        # Fallback caso rode de outra pasta
+        st.markdown("<h1 style='text-align: center; color: #1E4ED8;'>🎙️</h1>", unsafe_allow_html=True)
+    
     st.header("⚙️ Opções Principais")
     idioma = st.text_input("🌍 Idioma do Áudio (ex: pt, en)", value="pt")
     
@@ -75,7 +240,7 @@ with st.sidebar:
 # ==========================================
 with tabs[0]:
     
-    st.markdown("<div class='step-title'>1️⃣ Passo 1: Selecione o Áudio</div>", unsafe_allow_html=True)
+    st.markdown("<div class='step-title'><div class='step-icon'>1</div> Selecione o Áudio</div>", unsafe_allow_html=True)
     uploaded_audio = st.file_uploader("Faça upload do arquivo de áudio ou vídeo (MP3, WAV, MP4)", type=['mp3', 'wav', 'mp4', 'm4a', 'ogg'], label_visibility="collapsed")
     
     if uploaded_audio:
@@ -90,7 +255,7 @@ with tabs[0]:
             if 'transcricao' in st.session_state:
                 del st.session_state['transcricao']
                 
-        st.markdown("<div class='step-title'>2️⃣ Passo 2: Iniciar Transcrição</div>", unsafe_allow_html=True)
+        st.markdown("<div class='step-title'><div class='step-icon'>2</div> Iniciar Transcrição</div>", unsafe_allow_html=True)
         col_btn, _ = st.columns([1, 2])
         with col_btn:
             iniciar = st.button("🚀 Iniciar Transcrição Agora", type="primary", use_container_width=True)
@@ -130,7 +295,7 @@ with tabs[0]:
     # 4. RESULTADOS E EXPORTAÇÃO
     # ==========================================
     if 'transcricao' in st.session_state:
-        st.markdown("<div class='step-title'>3️⃣ Passo 3: Resultados e Exportação</div>", unsafe_allow_html=True)
+        st.markdown("<div class='step-title'><div class='step-icon'>3</div> Resultados e Exportação</div>", unsafe_allow_html=True)
         
         texto_t = st.session_state['transcricao']
         st.text_area("Texto gerado:", value=texto_t, height=300, label_visibility="collapsed")
@@ -164,8 +329,8 @@ with tabs[0]:
 # 5. ABA 2: CONTAGEM DE CARACTERES
 # ==========================================
 with tabs[1]:
-    st.header("📊 Contagem de Caracteres e Palavras")
-    st.markdown("Cole o seu texto abaixo ou faça upload de um arquivo para análise instantânea.")
+    st.markdown("<div class='step-title'><div class='step-icon'>📊</div> Contagem de Caracteres e Palavras</div>", unsafe_allow_html=True)
+    st.markdown("<div style='color: #64748B; margin-bottom: 1rem;'>Cole o seu texto abaixo ou faça upload de um arquivo para análise instantânea.</div>", unsafe_allow_html=True)
     
     texto_para_contar = ""
     
