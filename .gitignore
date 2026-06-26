@@ -7,3 +7,4 @@ __pycache__/
 *.docx
 *.pdf
 .DS_Store
+.env

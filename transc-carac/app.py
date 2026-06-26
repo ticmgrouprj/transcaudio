@@ -5,7 +5,9 @@ import os
 import re
 from transcriber import transcrever_audio
 from exporter import gerar_docx, gerar_pdf, gerar_txt
+from dotenv import load_dotenv
 
+load_dotenv()
 st.set_page_config(page_title="Transc-Carac Pro", page_icon="📝", layout="wide")
 
 # ==========================================
@@ -265,7 +267,8 @@ with st.sidebar:
     # Escondendo as configurações sensíveis em um expander
     with st.expander("🛠️ Configurações Avançadas"):
         st.markdown("**Diarização (Separação de Vozes)**")
-        hf_token = st.text_input("🔑 HuggingFace Token", type="password", help="Cole o token do HuggingFace para separar múltiplos locutores automaticamente.")
+        default_hf_token = os.getenv("HF_TOKEN", "")
+        hf_token = st.text_input("🔑 HuggingFace Token", type="password", value=default_hf_token, help="Cole o token do HuggingFace para separar múltiplos locutores automaticamente.")
         num_locutores = st.number_input("👥 Número de Locutores (0 = auto)", min_value=0, value=0, step=1)
         
         st.markdown("**Qualidade da Transcrição**")
